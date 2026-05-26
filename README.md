@@ -1,14 +1,14 @@
-# 🌊 PyQGIS Llano River Corridor, 150 Structures Terrain Analysis
+# 🌊 PyQGIS Llano River Corridor, 149 Structures Terrain Analysis
 
-An automated PyQGIS script that reproduces the full terrain analysis workflow used to identify 150 high-risk structures in the Llano River corridor, Llano and Burnet Counties, TX. The entire QGIS/GRASS workflow, built from scratch using raw federal data sources, runs end to end in a single executable script. This repository is a methodological companion to [ArcPy-Guadalupe-Terrain-Analysis](https://github.com/Austin-AECEomnis/ArcPy-Guadalupe-Terrain-Analysis), applying the same analytical framework to a second Hill Country watershed in a different GIS platform.
+An automated PyQGIS script that reproduces the full terrain analysis workflow used to identify 149 high-risk structures in the Llano River corridor, Llano and Burnet Counties, TX. The entire QGIS/GRASS workflow, built from scratch using raw federal data sources, runs end to end in a single executable script. This repository is a methodological companion to [ArcPy-Guadalupe-Terrain-Analysis](https://github.com/Austin-AECEomnis/ArcPy-Guadalupe-Terrain-Analysis), applying the same analytical framework to a second Hill Country watershed in a different GIS platform.
 
 ---
 
 ## 📋 Overview
 
-In October 2018, the Llano River crested more than 10 feet above flood stage, inundating structures throughout the corridor. A terrain analysis conducted in QGIS identified 150 structures sharing elevation, slope, and flow accumulation characteristics consistent with direct inundation risk. The analysis also confirmed a critical data gap: 23 structures in Llano city that were directly inundated fall within FEMA X zones, designating them as moderate-risk rather than high-risk. This mirrors the Hunt VFD finding from Repository 4, where structures in the Guadalupe corridor were similarly misclassified relative to their documented flood exposure.
+In October 2018, the Llano River crested more than 10 feet above flood stage, inundating structures throughout the corridor. A terrain analysis conducted in QGIS identified 149 structures sharing elevation, slope, and flow accumulation characteristics consistent with direct inundation risk. The analysis also confirmed a critical data gap: 23 structures in Llano city that were directly inundated fall within FEMA X zones, designating them as moderate-risk rather than high-risk. This mirrors the Hunt VFD finding from Repository 4, where structures in the Guadalupe corridor were similarly misclassified relative to their documented flood exposure.
 
-This script automates that analysis from raw inputs to final output. Given a DEM, FEMA flood zone boundaries, and a building footprint dataset, it derives terrain surfaces, extracts values to structure centroids, and applies the validated filter that produces the 150-structure result.
+This script automates that analysis from raw inputs to final output. Given a DEM, FEMA flood zone boundaries, and a building footprint dataset, it derives terrain surfaces, extracts values to structure centroids, and applies the validated filter that produces the 149-structure result.
 
 ---
 
@@ -62,7 +62,7 @@ The script executes seven sequential steps:
 
 **Step 6, Sample terrain values to building centroids.** Elevation, slope, and flow accumulation values are extracted to building centroid points using three sequential Sample Raster Values passes. Each pass adds one field. Three sequential Rename Field passes then standardize column names to `elev_m`, `slope_deg`, and `flow_acc`. This three-pass approach replicates the behavior of ArcGIS Pro's Extract Multi Values to Points tool, which is not available in QGIS.
 
-**Step 7, Apply terrain filter.** Structures are filtered using the expression `elev_m < 420 AND slope_deg < 20 AND flow_acc > 15.88`. The elevation ceiling of 420 meters captures the valley floor extent at both Llano and Kingsland. The slope ceiling of 20 degrees excludes upland and hillside structures not subject to inundation-type flooding. The flow accumulation floor of 15.88 retains structures in zones where upstream drainage converges. These thresholds were calibrated against the documented 2018 inundation extent and validated against the 150-structure count.
+**Step 7, Apply terrain filter.** Structures are filtered using the expression `elev_m < 420 AND slope_deg < 20 AND flow_acc > 15.88`. The elevation ceiling of 420 meters captures the valley floor extent at both Llano and Kingsland. The slope ceiling of 20 degrees excludes upland and hillside structures not subject to inundation-type flooding. The flow accumulation floor of 15.88 retains structures in zones where upstream drainage converges. These thresholds were calibrated against the documented 2018 inundation extent and validated against the 149-structure count.
 
 ---
 
@@ -70,7 +70,7 @@ The script executes seven sequential steps:
 
 | Metric | Value |
 |--------|-------|
-| Final structure count | 150 |
+| Final structure count | 149 |
 | Spatial cluster 1 | Kingsland / Lake LBJ corridor (FEMA A/AE zones) |
 | Spatial cluster 2 | Llano city at TX-29/TX-71 (FEMA X zone) |
 | Spatial cluster 3 | Burnet city at US-281/TX-29 (FEMA X zone, ambiguous) |
@@ -100,7 +100,7 @@ This finding is methodologically identical to the Hunt VFD result in Repository 
 | DEM preprocessing | Buffer + clip to study area | Reproject only, no clip needed |
 | Output format | File Geodatabase (.gdb) | GeoPackage (.gpkg) |
 | Study area | Guadalupe River, Kerr County | Llano River, Llano + Burnet Counties |
-| Final structure count | 107 | 150 |
+| Final structure count | 107 | 149 |
 | FEMA zone gap | Hunt VFD corridor, AE zone edge | Llano city, X zone interior |
 | Filter logic | Two-pass slope then flow accumulation | Single-expression combining elevation, slope, flow accumulation |
 
@@ -110,7 +110,7 @@ The analytical framework transferred directly between platforms. Tool names, par
 
 ## ⚠️ Data Limitations
 
-**OSM building coverage.** OpenStreetMap coverage in Llano and Burnet Counties is concentrated in incorporated areas. Rural residential structures along the river corridor between Kingsland and Llano city are substantially underrepresented. The 150-structure count reflects the OSM dataset, not the true number of structures in flood-vulnerable terrain. Higher-quality building footprint data from TNRIS or county appraisal district parcels would produce a more complete result.
+**OSM building coverage.** OpenStreetMap coverage in Llano and Burnet Counties is concentrated in incorporated areas. Rural residential structures along the river corridor between Kingsland and Llano city are substantially underrepresented. The 149-structure count reflects the OSM dataset, not the true number of structures in flood-vulnerable terrain. Higher-quality building footprint data from TNRIS or county appraisal district parcels would produce a more complete result.
 
 **FEMA X zone classification.** The X zone gap identified in this analysis is a finding about the data, not a flaw in the methodology. Terrain analysis surfaces exposure that static flood zone boundaries do not capture. The methodology is sound. More accurate flood zone mapping would produce a tighter alignment between analytical results and official designations, but would not change what the terrain shows.
 
@@ -138,7 +138,7 @@ BASE_DIR = r"C:\GIS_Projects\LlanoRiver_FloodAnalysis"
 
 ## 🐛 Troubleshooting Notes
 
-**Flow accumulation count mismatch.** The flow_acc column contains the raw MFD accumulation value. On an early script run, a threshold of `flow_acc > 100` produced only 21 structures instead of 150. The validated threshold is `flow_acc > 15.88`. If your count is significantly lower than expected, the flow accumulation threshold is the most likely cause. Print a sample of `flow_acc` values from your Buildings_Final layer before filtering to confirm the value range.
+**Flow accumulation count mismatch.** The flow_acc column contains the raw MFD accumulation value. On an early script run, a threshold of `flow_acc > 100` produced only 21 structures instead of 149. The validated threshold is `flow_acc > 15.88`. If your count is significantly lower than expected, the flow accumulation threshold is the most likely cause. Print a sample of `flow_acc` values from your Buildings_Final layer before filtering to confirm the value range.
 
 **Double extension on DEM filename.** The USGS National Map download produces a file named with a double `.tif.tif` extension. This is expected. The script references `LlanoDEM_raw.tif.tif` by design. Do not rename the file.
 
@@ -154,6 +154,7 @@ BASE_DIR = r"C:\GIS_Projects\LlanoRiver_FloodAnalysis"
 
 This repository is part of a broader multi-platform flood vulnerability analysis series:
 
+- **Live Web Map:** https://austin-aeceomnis.github.io/QGIS-LlanoRiver-FloodAnalysis/
 - **Repository 4 (ArcGIS Pro):** [ArcPy-Guadalupe-Terrain-Analysis](https://github.com/Austin-AECEomnis/ArcPy-Guadalupe-Terrain-Analysis) — same methodology, ArcGIS Pro platform, Kerr County
 - **StoryMap narrative:** https://arcg.is/0bGXv02
 - **Experience Builder application:** https://experience.arcgis.com/experience/09c67703781c49ddbc0830655aba9473/
